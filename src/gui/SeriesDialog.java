@@ -26,6 +26,10 @@ class SeriesDialog extends JDialog
         implements ActionListener,
         PropertyChangeListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1876781612105027706L;
 	TvSeries series;
 	boolean edit;
 	JTextField FriendlyName;

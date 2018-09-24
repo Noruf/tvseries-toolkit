@@ -1,13 +1,15 @@
 package gui;
 
-import java.awt.event.ActionListener;
-
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.text.DefaultEditorKit;
 
 public class ContextMenu extends JPopupMenu{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6751691571983809207L;
 	JMenuItem cut;
 	JMenuItem copy;
 	JMenuItem paste;

@@ -20,7 +20,6 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.AbstractDocument;
 
 import managers.ImportExportManager;
 import models.Link;
@@ -29,6 +28,12 @@ import models.TvSeries;
 class LinkDialog extends JDialog
         implements ActionListener,
         PropertyChangeListener {
+
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3396957182889860591L;
 
 	TvSeries series;
 	Link link;
@@ -62,12 +67,6 @@ class LinkDialog extends JDialog
 		this.link=link;
 		this.setTitle((edit?"Edit":"Add")+" link");
 		JPanel panel1 = new JPanel();
-		
-		
-//		Season = new JTextField(Integer.toString(link.Season + 1), 10);
-//		((AbstractDocument) Season.getDocument()).setDocumentFilter(new Window.NumberOnlyFilter());
-//		Season.setComponentPopupMenu(new ContextMenu());
-//		panel1.add(Season);
 		
 		
 		panel1.add(new JLabel("Season"));
