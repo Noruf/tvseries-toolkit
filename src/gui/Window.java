@@ -11,7 +11,6 @@ import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,8 +34,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
-
-import managers.ImportExportManager;
+import managers.DataManager;
 import managers.LinkManager;
 import managers.SoundManager;
 import models.Link;
@@ -59,21 +57,15 @@ public class Window implements Runnable {
 	JComboBox<String> source;
 	JLabel statusLabel;
 
-	List<TvSeries> tvseries;
-	List<Link> searchEngines;
-
-	ImportExportManager dataManager;
+	DataManager dataManager;
 	SoundManager soundManager;
 	LinkManager linkManager;
 	
 	MenuBar menuBar;
 
-//	int currentSeason = 0;
 	int[] currentSE = { 0, 0 };
 
 	public static void main(String[] args) {
-
-		
 		EventQueue.invokeLater(new Window());
 	}
 
@@ -82,21 +74,15 @@ public class Window implements Runnable {
 	@Override
 	public void run() {
 		
-		dataManager = new ImportExportManager();
+		dataManager = new DataManager();
 
 		linkManager = new LinkManager();
 
-		tvseries = dataManager.ImportData();
-		searchEngines = dataManager.ImportSearchEngines();
-		// tvseries = new ArrayList<TvSeries>();
-		frame = new JFrame("CSI Miami Toolkit");
+		frame = new JFrame("Tv Series Toolkit");
 		Container contentPane = frame.getContentPane();
-	
-		
 		
 		setUIFont(new javax.swing.plaf.FontUIResource("", Font.BOLD, 25));
 		UIManager.put("Menu.font", new javax.swing.plaf.FontUIResource("", Font.BOLD, 15));
-		//UIManager.put("MenuItem.font", new javax.swing.plaf.FontUIResource("", Font.BOLD, 10));
 		menuBar = new MenuBar(frame);
 		menuBar.setMusicListener(new ActionListener() {
 			@Override
@@ -109,7 +95,6 @@ public class Window implements Runnable {
 		
 		menuBar.music.setSelected(!devEnv);
 		InputStream stream = this.getClass().getResourceAsStream("/icon.png");
-		//ImageIcon img = new ImageIcon(this.getClass().getResource("../icon.png"));
 		BufferedImage myPicture;
 		
 		try {
@@ -135,7 +120,6 @@ public class Window implements Runnable {
 		JPanel choosePanel = new JPanel();
 		GridBagConstraints gbc = new GridBagConstraints();
 		seriesChoice = new JComboBox<TvSeries>();
-		updateSeriesChooser();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 0.0;
@@ -144,7 +128,6 @@ public class Window implements Runnable {
 		
 		seriesChoice.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-
 				if (e.getStateChange() == 2 || e.getItemSelectable().toString().contains("invalid"))
 					return;
 				int selection = seriesChoice.getSelectedIndex();
@@ -175,7 +158,6 @@ public class Window implements Runnable {
 		choosePanel.add(addSeries);
 		contentPane.add(choosePanel, gbc);
 
-		// gbc = new GridBagConstraints();
 
 		episodeNumber = new JTextField(4);
 		((AbstractDocument) episodeNumber.getDocument()).setDocumentFilter(new NumberOnlyFilter());
@@ -186,15 +168,13 @@ public class Window implements Runnable {
 				// Gives notification that a portion of the document has been removed.
 				if (episodeNumber.getText().isEmpty())
 					return;
-				int ep = Integer.valueOf("0" + episodeNumber.getText());
-				updateLabel(ep);
+				updateLabel();
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				// Gives notification that there was an insert into the document.
-				int ep = Integer.valueOf(episodeNumber.getText());
-				updateLabel(ep);
+				updateLabel();
 			}
 
 			@Override
@@ -202,12 +182,8 @@ public class Window implements Runnable {
 			}
 		});
 		episodeNumber.setComponentPopupMenu(new ContextMenu());
-		// gbc.ipadx = 100;
-		// JOptionPane.showMessageDialog(null, episodeNumber);
-		// JTextField episodeNumber = new JTextField(20);
-		JPanel epPanel = new JPanel(); // Create new panel
-		// epPanel.setLayout(new BoxLayout(epPanel, BoxLayout.X_AXIS));
-		epPanel.add(new JLabel("Episode: ")); // Add components to it
+		JPanel epPanel = new JPanel(); 
+		epPanel.add(new JLabel("Episode: "));
 		epPanel.add(episodeNumber);
 		JButton minus = new JButton("-");
 		minus.addActionListener(new ActionListener() {
@@ -230,7 +206,6 @@ public class Window implements Runnable {
 		gbc.gridy = 1;
 		contentPane.add(epPanel, gbc);
 
-		// gbc = new GridBagConstraints();
 		JPanel sePanel = new JPanel();
 		seasonEpisode = new JLabel("s01e01");
 		sePanel.add(seasonEpisode);
@@ -238,7 +213,6 @@ public class Window implements Runnable {
 		gbc.gridy = 2;
 		contentPane.add(sePanel, gbc);
 
-		// gbc = new GridBagConstraints();
 		JPanel sourcePanel = new JPanel();
 		source = new JComboBox<String>();
 		sourcePanel.add(new JLabel("Source"));
@@ -272,9 +246,9 @@ public class Window implements Runnable {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int ep = Integer.parseInt("0" + episodeNumber.getText());
-				TvSeries series = tvseries.get(seriesChoice.getSelectedIndex());
+				TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
 				series.CurrentEpisode = ep;
-				dataManager.ExportData(tvseries);
+				dataManager.exportData();
 				statusLabel.setText("Saved! Episode: " + ep + ", " + seasonEpisode.getText());
 			}
 		});
@@ -287,7 +261,7 @@ public class Window implements Runnable {
 				soundManager.stop();
 
 				int ep = Integer.parseInt("0" + episodeNumber.getText());
-				TvSeries series = tvseries.get(seriesChoice.getSelectedIndex());
+				TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
 				if(menuBar.isAutosave())series.CurrentEpisode = ep;
 				statusLabel.setText("Wait...");
 				Thread one = new Thread() {
@@ -295,7 +269,7 @@ public class Window implements Runnable {
 						
 						linkManager.openLink(getSelectedLink(), series.Name, series.getSEString(ep));
 
-						if(menuBar.isAutosave())dataManager.ExportData(tvseries);
+						if(menuBar.isAutosave())dataManager.exportData();
 						statusLabel.setText("Saved! Link Opened.");
 					}
 				};
@@ -316,9 +290,6 @@ public class Window implements Runnable {
 		gbc.insets = new Insets(10, 10, 10, 10);
 		contentPane.add(picLabel, gbc);
 
-		// frame.setUndecorated(true);
-		// frame.setOpacity(0.40f);
-
 		// create the status bar panel and shove it down the bottom of the frame
 		JPanel statusPanel = new JPanel();
 		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
@@ -333,6 +304,8 @@ public class Window implements Runnable {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		contentPane.add(statusPanel, gbc);
 
+		dataManager.importData(() -> updateSeriesChooser());
+		
 		frame.setResizable(false);
 		frame.pack();
 
@@ -340,11 +313,11 @@ public class Window implements Runnable {
 		frame.setVisible(true);
 
 		soundManager = new SoundManager();
-		if (!tvseries.isEmpty()) {
-			updateGUI();
-			updateLabel(tvseries.get(0).CurrentEpisode);
-			updateSound(0);
-		}
+//		if (!dataManager.getTvSeries().isEmpty()) {
+//			updateGUI();
+//			updateLabel();
+//			updateSound(0);
+//		}
 		menuBar.setEditButtonsListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -356,20 +329,27 @@ public class Window implements Runnable {
 				frame.pack();
 			}
 		});
+		
+		
 	}
-
+//	private void setDataVariables(List<TvSeries> tvseries,List<Link> searchEngines) {
+//		this.tvseries = tvseries;
+//		this.searchEngines = searchEngines;
+//	}
 	private void updateSeriesChooser() {
 		seriesChoice.removeAllItems();
-		for (TvSeries item : tvseries) {
+		for (TvSeries item : dataManager.getTvSeries()) {
 			seriesChoice.addItem(item);
 		}
 		seriesChoice.setMaximumRowCount(seriesChoice.getModel().getSize());
+		updateGUI();
 	}
 
 	private void updateSeriesChooser(int selection) {
+		System.out.println("updateSeriesChooser: " + selection);
 		updateSeriesChooser();
 		seriesChoice.setSelectedIndex(selection);
-		updateGUI();
+		
 		updateSound(selection);
 
 	}
@@ -381,14 +361,15 @@ public class Window implements Runnable {
 				source.addItem(item.Name);
 			}
 		}
-		for (Link item : searchEngines) {
+		for (Link item : dataManager.getSearchEngines()) {
 			source.addItem(item.Name);
 		}
 
 	}
 
-	private void updateLabel(int ep) {
+	private void updateLabel() {
 		TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
+		int ep = Integer.valueOf("0" + episodeNumber.getText());
 		int[] se = series.fromEpisode(ep);
 		int s = se[0] + 1;
 		int e = se[1];
@@ -411,7 +392,8 @@ public class Window implements Runnable {
 	}
 
 	protected void updateGUI() {
-		TvSeries series = getSelectedSeries();
+		TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
+		if(series==null)return;
 		int ep = series.CurrentEpisode;
 		episodeNumber.setText(Integer.toString(ep));
 		updateSources(series, currentSE[0]);
@@ -423,21 +405,14 @@ public class Window implements Runnable {
 				BufferedImage myPicture = dataManager.loadImage(imgPath);
 				ImageIcon image = new ImageIcon(myPicture.getScaledInstance(-1, 450, Image.SCALE_AREA_AVERAGING));
 				setPoster(image,series);
-					
-//					picLabel.setIcon(new ImageIcon(myPicture.getScaledInstance(-1, 450, Image.SCALE_AREA_AVERAGING)));
-//					frame.pack();
-//					frame.getContentPane().revalidate();
-//					frame.getContentPane().repaint();
-
 			}
 		};
 		one.start();
 	}
 
 	private void updateSound(int i) {
-		if (i < 0)
-			return;
-		TvSeries series = tvseries.get(i);
+		TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
+		if (series==null)return;
 		soundManager.stop();
 
 		if(menuBar.isMusic())soundManager.play(series.MusicPath);
@@ -447,14 +422,14 @@ public class Window implements Runnable {
 	
 
 	private Link getSelectedLink() {
-		TvSeries series = tvseries.get(seriesChoice.getSelectedIndex());
+		TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
 		for (Link item : series.Links) {
 			if (item.Name.equalsIgnoreCase(source.getSelectedItem().toString())
 					&& (item.isSeason(currentSE[0]))) {
 				return item;
 			}
 		}
-		for (Link item : searchEngines) {
+		for (Link item : dataManager.getSearchEngines()) {
 			if (item.Name.equalsIgnoreCase(source.getSelectedItem().toString())) {
 				return item;
 			}
@@ -474,25 +449,25 @@ public class Window implements Runnable {
 		sd.setVisible(true);	
 		int choice = sd.state;
 		if(choice==sd.OK) {
-			if(!edit)tvseries.add(series);
-			updateSeriesChooser(tvseries.indexOf(series));
+			if(!edit)dataManager.add(series);
+			updateSeriesChooser(dataManager.getTvSeries().indexOf(series));
 		}
 		else if(choice==sd.DELETE) {
-			tvseries.remove(series);
+			dataManager.remove(series);
 			updateSeriesChooser();
 			updateGUI();
 			updateSound(0);
 		}else {
 			return;
 		}
-		dataManager.ExportData(tvseries);
+		dataManager.exportData();
 	}
 
 	private void showLinkDialog(boolean edit) {
 		TvSeries series = getSelectedSeries();
 		Link link = edit?getSelectedLink():new Link();
 		
-		if (edit&&searchEngines.contains(link)) {
+		if (edit&&dataManager.getSearchEngines().contains(link)) {
 			JOptionPane.showMessageDialog(null, "You cannot edit search engines!", "Warning!",
 					JOptionPane.WARNING_MESSAGE);
 			return;
@@ -502,16 +477,16 @@ public class Window implements Runnable {
 		int choice = ld.state;
 		if(choice==ld.OK) {
 			if(!edit)series.AddLink(link);
-			updateLabel(Integer.parseInt("0" + episodeNumber.getText()));
+			updateLabel();
 		}
 		else if(choice==ld.DELETE) {
 			series.RemoveLink(link);
-			updateLabel(Integer.parseInt("0" + episodeNumber.getText()));
+			updateLabel();
 		}else {
 			return;
 		}
 		updateSources(series, currentSE[0]);
-		dataManager.ExportData(tvseries);
+		dataManager.exportData();
 		
 	}
 

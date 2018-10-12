@@ -120,6 +120,7 @@ public class ImportExportManager {
 		}
 	}
 
+	@SuppressWarnings("finally")
 	public List<TvSeries> ImportData() {
 		List<TvSeries> seriesList = new ArrayList<TvSeries>();
 		try {
@@ -179,7 +180,9 @@ public class ImportExportManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return seriesList;
+		finally {
+			return seriesList;
+		}
 	}
 	
 	public List<Link> ImportSearchEngines() {

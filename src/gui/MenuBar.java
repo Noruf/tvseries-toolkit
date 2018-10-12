@@ -55,7 +55,7 @@ public class MenuBar extends JMenuBar {
 		info.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "TV Series Toolkit\n\n Adam Zieliñski\n beta 1.0");
+				JOptionPane.showMessageDialog(null, "TV Series Toolkit\n\n Adam Zieliñski\n version 0.01");
 				
 			}
 		});
