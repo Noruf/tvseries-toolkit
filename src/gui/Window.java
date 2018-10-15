@@ -201,6 +201,14 @@ public class Window implements Runnable {
 			}
 		});
 		epPanel.add(plus);
+		JButton set = new JButton("set");
+		set.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showEpisodeDialog();
+			}
+		});
+		epPanel.add(set);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridx = 0;
 		gbc.gridy = 1;
@@ -490,6 +498,19 @@ public class Window implements Runnable {
 		
 	}
 
+	private void showEpisodeDialog() {
+		TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
+		EpisodeDialog dialog = new EpisodeDialog(frame,series);
+		dialog.setVisible(true);
+		int choice = dialog.state;
+		int s = dialog.season;
+		int e = dialog.episode;
+		if(choice==dialog.OK) {
+			int episode = series.fromSeasonEpisode(s, e);
+			episodeNumber.setText(episode+"");
+		}
+	}
+	
 	public static void setUIFont(javax.swing.plaf.FontUIResource f) {
 		java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
 		while (keys.hasMoreElements()) {
