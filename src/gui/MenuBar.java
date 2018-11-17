@@ -72,7 +72,7 @@ public class MenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				SeriesManagerDialog dialog = new SeriesManagerDialog(frame,dataManager);
 				dialog.setVisible(true);
-				window.gotData();
+				if(dialog.state == dialog.OK)window.gotData();
 			}
 		});
 	}
