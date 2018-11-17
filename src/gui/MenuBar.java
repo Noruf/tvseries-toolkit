@@ -10,6 +10,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import managers.DataManager;
+
 
 public class MenuBar extends JMenuBar {
 
@@ -26,8 +28,13 @@ public class MenuBar extends JMenuBar {
 	JCheckBoxMenuItem music;
 	JCheckBoxMenuItem editButtons;
 	JMenuItem info;
-	public MenuBar(JFrame frame) {
+	
+	JFrame frame;
+	managers.W window;
+	public MenuBar(JFrame frame, DataManager dataManager, managers.W window) {
 		super();
+		this.frame = frame;
+		this.window = window;
 		app = new JMenu("App");
 		add(app);
 		exit = new JMenuItem("Exit");
@@ -42,6 +49,10 @@ public class MenuBar extends JMenuBar {
 		
 		options = new JMenu("Options");
 		add(options);
+		JMenuItem seriesManager = new JMenuItem("Series Manager");
+		options.add(seriesManager);
+		seriesManagerDialog(seriesManager,dataManager);
+		options.addSeparator();
 		autosave = new JCheckBoxMenuItem("Auto-save",true);
 		options.add(autosave);
 		music = new JCheckBoxMenuItem("Music",true);
@@ -52,14 +63,27 @@ public class MenuBar extends JMenuBar {
 		help = new JMenu("Help");
 		add(help);
 		info = new JMenuItem("Info");
+		infoDialog(info,frame);
+		help.add(info);	
+	}
+	void seriesManagerDialog(JMenuItem seriesManager,DataManager dataManager) {
+		seriesManager.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SeriesManagerDialog dialog = new SeriesManagerDialog(frame,dataManager);
+				dialog.setVisible(true);
+				window.gotData();
+			}
+		});
+	}
+	void infoDialog(JMenuItem info,JFrame frame) {
 		info.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "TV Series Toolkit\n\n Adam Zieliñski\n version 0.01");
+				JOptionPane.showMessageDialog(frame, "TV Series Toolkit\n\n Adam Zieliñski\n version 0.01");
 				
 			}
 		});
-		help.add(info);	
 	}
 	
 	public void setMusicListener(ActionListener l){

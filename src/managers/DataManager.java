@@ -2,6 +2,7 @@ package managers;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import models.Link;
@@ -34,6 +35,10 @@ public class DataManager {
 	
 	public List<TvSeries> getTvSeries() {
 		return tvseries;
+	}
+	public void setTvSeries(TvSeries[] arr) {
+		tvseries = new ArrayList<>(Arrays.asList(arr));
+		exportData();
 	}
 	public List<Link> getSearchEngines() {
 		return searchEngines;

@@ -83,7 +83,7 @@ public class Window implements Runnable {
 		
 		setUIFont(new javax.swing.plaf.FontUIResource("", Font.BOLD, 25));
 		UIManager.put("Menu.font", new javax.swing.plaf.FontUIResource("", Font.BOLD, 15));
-		menuBar = new MenuBar(frame);
+		menuBar = new MenuBar(frame,dataManager,() -> updateSeriesChooser());
 		menuBar.setMusicListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
