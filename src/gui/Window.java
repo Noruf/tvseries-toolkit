@@ -54,7 +54,7 @@ public class Window implements Runnable {
 	JTextField episodeNumber;
 	JLabel seasonEpisode;
 	JLabel picLabel;
-	JComboBox<String> source;
+	JComboBox<Link> source;
 	JLabel statusLabel;
 
 	DataManager dataManager;
@@ -222,7 +222,7 @@ public class Window implements Runnable {
 		contentPane.add(sePanel, gbc);
 
 		JPanel sourcePanel = new JPanel();
-		source = new JComboBox<String>();
+		source = new JComboBox<Link>();
 		sourcePanel.add(new JLabel("Source"));
 		sourcePanel.add(source);
 		JButton editSource = new JButton("@");
@@ -275,7 +275,7 @@ public class Window implements Runnable {
 				Thread one = new Thread() {
 					public void run() {
 						
-						linkManager.openLink(getSelectedLink(), series.Name, series.getSEString(ep));
+						linkManager.openLink((Link)source.getSelectedItem(), series.Name, series.getSEString(ep));
 
 						if(menuBar.isAutosave())dataManager.exportData();
 						statusLabel.setText("Saved! Link Opened.");
@@ -366,11 +366,11 @@ public class Window implements Runnable {
 		source.removeAllItems();
 		for (Link item : series.Links) {
 			if (item.isSeason(s)) {
-				source.addItem(item.Name);
+				source.addItem(item);
 			}
 		}
 		for (Link item : dataManager.getSearchEngines()) {
-			source.addItem(item.Name);
+			source.addItem(item);
 		}
 
 	}
@@ -429,21 +429,7 @@ public class Window implements Runnable {
 	
 	
 
-	private Link getSelectedLink() {
-		TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
-		for (Link item : series.Links) {
-			if (item.Name.equalsIgnoreCase(source.getSelectedItem().toString())
-					&& (item.isSeason(currentSE[0]))) {
-				return item;
-			}
-		}
-		for (Link item : dataManager.getSearchEngines()) {
-			if (item.Name.equalsIgnoreCase(source.getSelectedItem().toString())) {
-				return item;
-			}
-		}
-		return null;
-	}
+
 
 	private TvSeries getSelectedSeries() {
 		return (TvSeries)seriesChoice.getSelectedItem();
@@ -473,7 +459,7 @@ public class Window implements Runnable {
 
 	private void showLinkDialog(boolean edit) {
 		TvSeries series = getSelectedSeries();
-		Link link = edit?getSelectedLink():new Link();
+		Link link = edit?(Link)source.getSelectedItem():new Link();
 		
 		if (edit&&dataManager.getSearchEngines().contains(link)) {
 			JOptionPane.showMessageDialog(null, "You cannot edit search engines!", "Warning!",
