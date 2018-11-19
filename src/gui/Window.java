@@ -77,17 +77,19 @@ public class Window implements Runnable {
 		dataManager = new DataManager();
 
 		linkManager = new LinkManager();
+		
+		soundManager = new SoundManager();
 
 		frame = new JFrame("Tv Series Toolkit");
 		Container contentPane = frame.getContentPane();
 		
 		setUIFont(new javax.swing.plaf.FontUIResource("", Font.BOLD, 25));
 		UIManager.put("Menu.font", new javax.swing.plaf.FontUIResource("", Font.BOLD, 15));
-		menuBar = new MenuBar(frame,dataManager,() -> updateSeriesChooser());
+		menuBar = new MenuBar(frame,dataManager,() -> updateSeriesChooser(seriesChoice.getSelectedItem()));
 		menuBar.setMusicListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateSound(seriesChoice.getSelectedIndex());
+				updateSound();
 			}
 		});
 		
@@ -130,9 +132,7 @@ public class Window implements Runnable {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == 2 || e.getItemSelectable().toString().contains("invalid"))
 					return;
-				int selection = seriesChoice.getSelectedIndex();
-				updateGUI();
-				updateSound(selection);
+				seriesChanged();
 			}
 		});
 		choosePanel.add(seriesChoice);
@@ -320,12 +320,9 @@ public class Window implements Runnable {
 		frame.setLocationByPlatform(true);
 		frame.setVisible(true);
 
-		soundManager = new SoundManager();
-//		if (!dataManager.getTvSeries().isEmpty()) {
-//			updateGUI();
-//			updateLabel();
-//			updateSound(0);
-//		}
+		
+		if(menuBar.isMusic())updateSound();
+
 		menuBar.setEditButtonsListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -337,13 +334,13 @@ public class Window implements Runnable {
 				frame.pack();
 			}
 		});
-		
-		
 	}
-//	private void setDataVariables(List<TvSeries> tvseries,List<Link> searchEngines) {
-//		this.tvseries = tvseries;
-//		this.searchEngines = searchEngines;
-//	}
+
+	private void seriesChanged() {
+		updateGUI();
+		updateSound();
+	}
+	
 	private void updateSeriesChooser() {
 		seriesChoice.removeAllItems();
 		for (TvSeries item : dataManager.getTvSeries()) {
@@ -353,13 +350,11 @@ public class Window implements Runnable {
 		updateGUI();
 	}
 
-	private void updateSeriesChooser(int selection) {
-		System.out.println("updateSeriesChooser: " + selection);
+	private void updateSeriesChooser(Object series) {
+		System.out.println("updateSeriesChooser: ");
 		updateSeriesChooser();
-		seriesChoice.setSelectedIndex(selection);
-		
-		updateSound(selection);
-
+		seriesChoice.setSelectedItem(series);
+		seriesChanged();
 	}
 
 	private void updateSources(TvSeries series, int s) {
@@ -418,18 +413,13 @@ public class Window implements Runnable {
 		one.start();
 	}
 
-	private void updateSound(int i) {
+	private void updateSound() {
 		TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
 		if (series==null)return;
 		soundManager.stop();
 
 		if(menuBar.isMusic())soundManager.play(series.MusicPath);
-
 	}
-	
-	
-
-
 
 	private TvSeries getSelectedSeries() {
 		return (TvSeries)seriesChoice.getSelectedItem();
@@ -443,14 +433,18 @@ public class Window implements Runnable {
 		sd.setVisible(true);	
 		int choice = sd.state;
 		if(choice==sd.OK) {
-			if(!edit)dataManager.add(series);
-			updateSeriesChooser(dataManager.getTvSeries().indexOf(series));
+			if(!edit) {
+				dataManager.add(series);
+				updateSeriesChooser(series);
+				
+			}else {
+				seriesChoice.updateUI();
+			}	
 		}
 		else if(choice==sd.DELETE) {
 			dataManager.remove(series);
 			updateSeriesChooser();
-			updateGUI();
-			updateSound(0);
+			seriesChanged();
 		}else {
 			return;
 		}
