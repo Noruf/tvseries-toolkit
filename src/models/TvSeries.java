@@ -100,5 +100,18 @@ public class TvSeries{
 	public String toString() {
 		return FriendlyName;
 	}
-	
+	public String getInfo() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(Name);
+		sb.append(System.lineSeparator() + System.lineSeparator());
+		sb.append("Episodes watched: " + CurrentEpisode + " of " + numberOfEpisodes() 
+		+ " (" + Math.round(CurrentEpisode*100.0/numberOfEpisodes()) + "%)");
+		sb.append(System.lineSeparator());
+		int[] se = fromEpisode(CurrentEpisode);
+		sb.append("Seasons watched: " + (se[0] + se[2]) + " of " + Seasons.length);
+		sb.append(System.lineSeparator());
+		sb.append("Current season: " + se[1] + " of " + Seasons[se[0]]);
+		
+		return sb.toString();
+	}
 }

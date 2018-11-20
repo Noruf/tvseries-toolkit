@@ -136,7 +136,17 @@ public class Window implements Runnable {
 			}
 		});
 		choosePanel.add(seriesChoice);
+		
+		JButton seriesInfo = new JButton("i");
+		seriesInfo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null,getSelectedSeries().getInfo());
+			}
+		});
 
+		choosePanel.add(seriesInfo);
+		
 		JButton editSeries = new JButton("@");
 		editSeries.addActionListener(new ActionListener() {
 			@Override
@@ -397,6 +407,7 @@ public class Window implements Runnable {
 	protected void updateGUI() {
 		TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
 		if(series==null)return;
+		System.out.println(series.getInfo());
 		int ep = series.CurrentEpisode;
 		episodeNumber.setText(Integer.toString(ep));
 		updateSources(series, currentSE[0]);
