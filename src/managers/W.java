@@ -1,5 +1,5 @@
 package managers;
 
 public interface W{
-	public void gotData();
+	public void callback();
 }

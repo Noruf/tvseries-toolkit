@@ -22,7 +22,7 @@ public class DataManager {
 	public void importData(W window) {
 		tvseries = importExportManager.ImportData();
 		searchEngines = importExportManager.ImportSearchEngines();
-		window.gotData();
+		window.callback();
 	}
 	
 	public void exportData() {

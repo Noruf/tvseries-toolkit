@@ -19,6 +19,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,6 +37,7 @@ import javax.swing.text.DocumentFilter;
 
 import managers.DataManager;
 import managers.LinkManager;
+import managers.SettingsManager;
 import managers.SoundManager;
 import models.Link;
 import models.TvSeries;
@@ -60,7 +62,8 @@ public class Window implements Runnable {
 	DataManager dataManager;
 	SoundManager soundManager;
 	LinkManager linkManager;
-	
+	SettingsManager settings;
+
 	MenuBar menuBar;
 
 	int[] currentSE = { 0, 0 };
@@ -75,10 +78,9 @@ public class Window implements Runnable {
 	public void run() {
 		
 		dataManager = new DataManager();
-
 		linkManager = new LinkManager();
-		
 		soundManager = new SoundManager();
+		settings = SettingsManager.SettingsManager;
 
 		frame = new JFrame("Tv Series Toolkit");
 		Container contentPane = frame.getContentPane();
@@ -86,16 +88,12 @@ public class Window implements Runnable {
 		setUIFont(new javax.swing.plaf.FontUIResource("", Font.BOLD, 25));
 		UIManager.put("Menu.font", new javax.swing.plaf.FontUIResource("", Font.BOLD, 15));
 		menuBar = new MenuBar(frame,dataManager,() -> updateSeriesChooser(seriesChoice.getSelectedItem()));
-		menuBar.setMusicListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateSound();
-			}
-		});
+		menuBar.setMusicListener(() -> updateSound());
 		
 		frame.setJMenuBar(menuBar);
 		
-		menuBar.music.setSelected(!devEnv);
+		
+		
 		InputStream stream = this.getClass().getResourceAsStream("/icon.png");
 		BufferedImage myPicture;
 		
@@ -280,14 +278,14 @@ public class Window implements Runnable {
 
 				int ep = Integer.parseInt("0" + episodeNumber.getText());
 				TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
-				if(menuBar.isAutosave())series.CurrentEpisode = ep;
+				if(settings.getBoolean("autosave"))series.CurrentEpisode = ep;
 				statusLabel.setText("Wait...");
 				Thread one = new Thread() {
 					public void run() {
 						
 						linkManager.openLink((Link)source.getSelectedItem(), series.Name, series.getSEString(ep));
 
-						if(menuBar.isAutosave())dataManager.exportData();
+						if(settings.getBoolean("autosave"))dataManager.exportData();
 						statusLabel.setText("Saved! Link Opened.");
 					}
 				};
@@ -330,20 +328,9 @@ public class Window implements Runnable {
 		frame.setLocationByPlatform(true);
 		frame.setVisible(true);
 
+		updateSound();
 		
-		if(menuBar.isMusic())updateSound();
-
-		menuBar.setEditButtonsListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				boolean show = menuBar.isEdit();
-				editSeries.setVisible(show);
-				addSeries.setVisible(show);
-				editSource.setVisible(show);
-				addSource.setVisible(show);
-				frame.pack();
-			}
-		});
+		menuBar.setEditButtonsListener(() -> toggleEditButtons(new JComponent[]{editSeries,addSeries,editSource,addSource}));
 	}
 
 	private void seriesChanged() {
@@ -407,7 +394,6 @@ public class Window implements Runnable {
 	protected void updateGUI() {
 		TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
 		if(series==null)return;
-		System.out.println(series.getInfo());
 		int ep = series.CurrentEpisode;
 		episodeNumber.setText(Integer.toString(ep));
 		updateSources(series, currentSE[0]);
@@ -429,7 +415,7 @@ public class Window implements Runnable {
 		if (series==null)return;
 		soundManager.stop();
 
-		if(menuBar.isMusic())soundManager.play(series.MusicPath);
+		if(settings.getBoolean("music"))soundManager.play(series.MusicPath);
 	}
 
 	private TvSeries getSelectedSeries() {
@@ -500,6 +486,14 @@ public class Window implements Runnable {
 			int episode = series.fromSeasonEpisode(s, e);
 			episodeNumber.setText(episode+"");
 		}
+	}
+	
+	private void toggleEditButtons(JComponent[] comps) {
+		boolean show = settings.getBoolean("editButtons");
+		for(JComponent comp : comps) {
+			comp.setVisible(show);
+		}
+		frame.pack();
 	}
 	
 	public static void setUIFont(javax.swing.plaf.FontUIResource f) {
