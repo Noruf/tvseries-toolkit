@@ -282,11 +282,14 @@ public class Window implements Runnable {
 				statusLabel.setText("Wait...");
 				Thread one = new Thread() {
 					public void run() {
+						Link link = (Link)source.getSelectedItem();
+						linkManager.openLink(link , series.Name, series.getSEString(ep));
+						statusLabel.setText("Link opened: " + link.Name);
+						if(settings.getBoolean("autosave")) {
+							dataManager.exportData();
+							statusLabel.setText(statusLabel.getText() + ". Saved: " + series.getSEString()+".");
+						}
 						
-						linkManager.openLink((Link)source.getSelectedItem(), series.Name, series.getSEString(ep));
-
-						if(settings.getBoolean("autosave"))dataManager.exportData();
-						statusLabel.setText("Saved! Link Opened.");
 					}
 				};
 				one.start();
