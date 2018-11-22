@@ -88,7 +88,7 @@ public class Window implements Runnable {
 		setUIFont(new javax.swing.plaf.FontUIResource("", Font.BOLD, 25));
 		UIManager.put("Menu.font", new javax.swing.plaf.FontUIResource("", Font.BOLD, 15));
 		menuBar = new MenuBar(frame,dataManager,() -> updateSeriesChooser(seriesChoice.getSelectedItem()));
-		menuBar.setMusicListener(() -> updateSound());
+		settings.addCallback(() -> updateSound());
 		
 		frame.setJMenuBar(menuBar);
 		
@@ -330,7 +330,7 @@ public class Window implements Runnable {
 
 		updateSound();
 		
-		menuBar.setEditButtonsListener(() -> toggleEditButtons(new JComponent[]{editSeries,addSeries,editSource,addSource}));
+		settings.addCallback(() -> toggleEditButtons(new JComponent[]{editSeries,addSeries,editSource,addSource}));
 	}
 
 	private void seriesChanged() {

@@ -60,11 +60,13 @@ public class MenuBar extends JMenuBar {
 		seriesManagerDialog(seriesManager,dataManager);
 		options.addSeparator();
 		autosave = new JCheckBoxMenuItem("Auto-save",settings.getBoolean("autosave"));
-		setAutosaveListener();
+		setMenuItemListener(autosave, "autosave");
 		options.add(autosave);
 		music = new JCheckBoxMenuItem("Music",settings.getBoolean("music"));
+		setMenuItemListener(music, "music");
 		options.add(music);
 		editButtons = new JCheckBoxMenuItem("Show Edit Buttons",settings.getBoolean("editButtons"));
+		setMenuItemListener(editButtons, "editButtons");
 		options.add(editButtons);
 		
 		
@@ -94,35 +96,12 @@ public class MenuBar extends JMenuBar {
 		});
 	}
 	
-	
-	
-	public void setEditButtonsListener(W window){
-		editButtons.addActionListener(new ActionListener() {
+	public void setMenuItemListener(JMenuItem item, String key){
+		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				settings.set("editButtons",editButtons.isSelected());
-				window.callback();
+				settings.set(key,item.isSelected());
 			}
 		});
-	}
-	public void setAutosaveListener(){
-		autosave.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				settings.set("autosave",autosave.isSelected());
-			}
-		});
-	}
-	public void setMusicListener(W window){
-		music.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				settings.set("music",music.isSelected());
-				window.callback();
-			}
-		});
-	}
-	public boolean isEdit() {
-		return editButtons.isSelected();
 	}
 }
