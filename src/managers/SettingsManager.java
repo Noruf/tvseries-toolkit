@@ -8,29 +8,31 @@ import java.util.Map;
 public class SettingsManager {
 	public static SettingsManager SettingsManager= new SettingsManager();
 	
-	boolean devEnv = System.getenv("eclipse42")!=null;
-	
 	Map<String, Object> settings;
 	List<W> delegates;
+	ImportExportManager dataManager;
 	public SettingsManager() {
-		settings = new HashMap<String, Object>();
+		dataManager = new ImportExportManager();
+		settings = dataManager.ImportSettings();
 		delegates = new ArrayList<W>();
-		set("autosave",true);
-		set("music",!devEnv);
-		set("editButtons",true);
 	}
 	
 	public Boolean getBoolean(String key) {
-		return (Boolean) settings.get(key);
+		Object val = settings.get(key);
+		return Boolean.valueOf(val!=null?val.toString():"true");
 	}
 
 	public int getInteger(String key) {
 		return (Integer) settings.get(key);
 	}
+	public void setVal(String key,Object value) {
+		settings.put(key, value);
+	}
 	
 	public void set(String key,Object value) {
 		settings.put(key, value);
 		updateAll();
+		dataManager.ExportData(settings);
 	}
 	public void toggle(String key) {
 		set(key,!getBoolean(key));
@@ -38,6 +40,7 @@ public class SettingsManager {
 	
 	public void addCallback(W callback) {
 		delegates.add(callback);
+		callback.callback();
 	}
 	public void updateAll() {
 		for(W w : delegates) {

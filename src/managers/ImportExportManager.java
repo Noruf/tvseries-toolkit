@@ -1,7 +1,9 @@
 package managers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.imageio.ImageIO;
@@ -217,6 +219,72 @@ public class ImportExportManager {
 		return searchEngines;
 	}
 
+	public Map<String, Object> ImportSettings() {
+		Map<String, Object> settings = new HashMap<String, Object>();
+		try {
+			File inputFile = new File(currentDirectory.getAbsolutePath()+"/data/settings.xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(inputFile);
+			doc.getDocumentElement().normalize();
+			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+			NodeList nList = doc.getElementsByTagName("settings");
+			System.out.println("----------------------------");
+
+			for (int index = 0; index < nList.getLength(); index++) {
+				Node nNode = nList.item(index);
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					NodeList list = eElement.getChildNodes();
+					for(int i = 0; i < list.getLength(); i++) {
+						Node node = list.item(i);
+						String name = node.getNodeName();
+						String value = node.getTextContent();
+						settings.put(name, value);
+						System.out.println(name + ":" + value);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return settings;
+	}
+	
+	public void ExportData(Map<String, Object> settings) {
+		try {
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.newDocument();
+
+			// root element
+			Element rootElement = doc.createElement("settings");
+			doc.appendChild(rootElement);
+
+			for (Map.Entry<String, Object> entry : settings.entrySet()) {
+			    String key = entry.getKey();
+			    String value = entry.getValue().toString();
+			    
+				Element setting = doc.createElement(key);
+				rootElement.appendChild(setting);
+				setting.appendChild(doc.createTextNode(value));
+
+			}
+			// write the content into xml file
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(currentDirectory.getAbsolutePath()+"/data/settings.xml"));
+			transformer.transform(source, result);
+
+			// Output to console for testing
+			StreamResult consoleResult = new StreamResult(System.out);
+			transformer.transform(source, consoleResult);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public String CopyFile(String sourcePath, String name) {
 		if(sourcePath.isEmpty()) {return sourcePath;}
