@@ -35,8 +35,8 @@ public class MenuBar extends JMenuBar {
 	SettingsManager settings;
 	
 	JFrame frame;
-	managers.W window;
-	public MenuBar(JFrame frame, DataManager dataManager, managers.W window) {
+	W window;
+	public MenuBar(JFrame frame, DataManager dataManager, W window) {
 		super();
 		this.frame = frame;
 		this.window = window;

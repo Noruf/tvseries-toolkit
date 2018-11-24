@@ -387,9 +387,9 @@ public class Window implements Runnable {
 	private void setPoster(ImageIcon image, TvSeries series) {
 		if(series == getSelectedSeries()&&image!=null) {
 			picLabel.setIcon(image);
+			frame.revalidate();
+			frame.repaint();
 			frame.pack();
-			frame.getContentPane().revalidate();
-			frame.getContentPane().repaint();
 		}
 	}
 
