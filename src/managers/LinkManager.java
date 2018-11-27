@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import models.Link;
 
 public class LinkManager {
+	public static LinkManager LinkManager = new LinkManager();
+	
 	private Desktop desktop;
 	public LinkManager() {
     	desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;

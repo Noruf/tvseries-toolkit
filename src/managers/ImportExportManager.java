@@ -32,6 +32,8 @@ import models.TvSeries;
 import models.Link;;
 
 public class ImportExportManager {
+	public static ImportExportManager ImportExportManager = new ImportExportManager();
+	
 	File currentDirectory;
 	public ImportExportManager() {
 		currentDirectory = new File("");

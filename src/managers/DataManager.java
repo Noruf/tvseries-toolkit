@@ -10,6 +10,7 @@ import models.TvSeries;
 
 
 public class DataManager {
+	public static DataManager DataManager = new DataManager();
 
 	ImportExportManager importExportManager;
 	List<TvSeries> tvseries = new ArrayList<>();

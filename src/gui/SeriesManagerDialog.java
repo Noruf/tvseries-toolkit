@@ -41,9 +41,9 @@ class SeriesManagerDialog extends JDialog
     /**
      * Creates the reusable dialog.
      */
-    public SeriesManagerDialog(Frame aFrame,DataManager dataManager) {
+    public SeriesManagerDialog(Frame aFrame) {
         super(aFrame,"Series Manager",true);
-        this.dataManager = dataManager;
+        this.dataManager = DataManager.DataManager;
         List<TvSeries> tvseries =  dataManager.getTvSeries();
         listModel = (TvSeries[])tvseries.toArray(new TvSeries[tvseries.size()]);
         

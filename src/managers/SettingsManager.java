@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 public class SettingsManager {
-	public static SettingsManager SettingsManager= new SettingsManager();
+	public static SettingsManager SettingsManager = new SettingsManager();
 	
 	Map<String, Object> settings;
 	List<W> delegates;
 	ImportExportManager dataManager;
 	public SettingsManager() {
-		dataManager = new ImportExportManager();
+		dataManager = ImportExportManager.ImportExportManager;
 		settings = dataManager.ImportSettings();
 		delegates = new ArrayList<W>();
 	}

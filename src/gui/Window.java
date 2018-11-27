@@ -77,9 +77,9 @@ public class Window implements Runnable {
 	@Override
 	public void run() {
 		
-		dataManager = new DataManager();
-		linkManager = new LinkManager();
-		soundManager = new SoundManager();
+		dataManager = DataManager.DataManager;
+		linkManager = LinkManager.LinkManager;
+		soundManager = SoundManager.SoundManager;
 		settings = SettingsManager.SettingsManager;
 
 		frame = new JFrame("Tv Series Toolkit");
@@ -87,7 +87,7 @@ public class Window implements Runnable {
 		
 		setUIFont(new javax.swing.plaf.FontUIResource("", Font.BOLD, 25));
 		UIManager.put("Menu.font", new javax.swing.plaf.FontUIResource("", Font.BOLD, 15));
-		menuBar = new MenuBar(frame,dataManager,() -> updateSeriesChooser(seriesChoice.getSelectedItem()));
+		menuBar = new MenuBar(frame,() -> updateSeriesChooser(seriesChoice.getSelectedItem()));
 		
 		
 		frame.setJMenuBar(menuBar);

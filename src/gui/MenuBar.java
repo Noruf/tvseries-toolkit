@@ -36,7 +36,7 @@ public class MenuBar extends JMenuBar {
 	
 	JFrame frame;
 	W window;
-	public MenuBar(JFrame frame, DataManager dataManager, W window) {
+	public MenuBar(JFrame frame, W window) {
 		super();
 		this.frame = frame;
 		this.window = window;
@@ -57,7 +57,7 @@ public class MenuBar extends JMenuBar {
 		add(options);
 		JMenuItem seriesManager = new JMenuItem("Series Manager");
 		options.add(seriesManager);
-		seriesManagerDialog(seriesManager,dataManager);
+		seriesManagerDialog(seriesManager);
 		options.addSeparator();
 		autosave = new JCheckBoxMenuItem("Auto-save",settings.getBoolean("autosave"));
 		setMenuItemListener(autosave, "autosave");
@@ -76,11 +76,11 @@ public class MenuBar extends JMenuBar {
 		infoDialog(info,frame);
 		help.add(info);	
 	}
-	void seriesManagerDialog(JMenuItem seriesManager,DataManager dataManager) {
+	void seriesManagerDialog(JMenuItem seriesManager) {
 		seriesManager.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				SeriesManagerDialog dialog = new SeriesManagerDialog(frame,dataManager);
+				SeriesManagerDialog dialog = new SeriesManagerDialog(frame);
 				dialog.setVisible(true);
 				if(dialog.state == dialog.OK)window.callback();
 			}

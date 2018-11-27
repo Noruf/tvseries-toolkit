@@ -55,7 +55,7 @@ class SeriesDialog extends JDialog
      */
     public SeriesDialog(Frame aFrame, TvSeries series, boolean edit) {
         super(aFrame, (edit?"Edit":"Add")+" series",true);
-        this.dataManager = new ImportExportManager();
+        this.dataManager = ImportExportManager.ImportExportManager;
         this.series = series;
         this.edit = edit;
 

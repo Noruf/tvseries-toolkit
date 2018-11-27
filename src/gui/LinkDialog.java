@@ -52,16 +52,12 @@ class LinkDialog extends JDialog
 	
 	public int state = 2;
 	
-	ImportExportManager dataManager;
-
-
     /**
      * Creates the reusable dialog.
      */
     public LinkDialog(Frame aFrame, TvSeries series,Link link,boolean edit) {
         super(aFrame, true);
         
-        this.dataManager = new ImportExportManager();
         this.series = series;
 		this.edit = edit;
 		this.link=link;

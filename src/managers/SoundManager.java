@@ -6,6 +6,7 @@ import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 
 public class SoundManager {
+	public static SoundManager SoundManager = new SoundManager();
 
 	Thread playerThread;
 

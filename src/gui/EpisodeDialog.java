@@ -56,8 +56,7 @@ class EpisodeDialog extends JDialog
 	JPanel episodePanel;
 	
 	JPanel mainPanel = new JPanel();
-	
-	ImportExportManager dataManager;
+
 
 
     /**
@@ -66,7 +65,6 @@ class EpisodeDialog extends JDialog
     public EpisodeDialog(Frame aFrame, TvSeries series) {
         super(aFrame, true);
         
-        this.dataManager = new ImportExportManager();
         this.series = series;
 		this.setTitle("Choose Episode");
 		
