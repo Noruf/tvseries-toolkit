@@ -56,9 +56,7 @@ public class LinkManager {
 	
 	public void openLink(Link link,String name,String se) {
 		if(link.Type==Link.URL) {
-			String addr = link.Address.replaceAll("###",name.replace(' ', '+') + "+" + se);
-			addr = addr.replaceAll("\\$\\{se\\}",se);
-			addr = addr.replaceAll("\\$\\{name\\}",name.replace(' ', '+'));
+			String addr = link.getAddress(name, se);
 			try {
 				openWebpage(new URL(addr));
 			} catch (MalformedURLException e) {
@@ -68,10 +66,6 @@ public class LinkManager {
 		}
 		else if(link.Type == Link.Folder) {
 			openFolder(link.Address,se);
-		}
-		
+		}	
 	}
-	
-	
-	
 }

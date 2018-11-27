@@ -210,7 +210,7 @@ public class ImportExportManager {
 					String address = eElement.getElementsByTagName("Address").item(0).getTextContent();
 					String name = eElement.getElementsByTagName("Name").item(0).getTextContent();
 
-					Link search = new Link(new int[]{-1},address,name,Link.URL);
+					Link search = new Link(new int[]{-1},address,name,Link.URL,false);
 					searchEngines.add(search);
 					System.out.println(search.Address + " " + search.Name);
 				}
