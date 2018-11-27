@@ -12,7 +12,6 @@ import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import managers.DataManager;
 import models.TvSeries;
@@ -31,7 +30,7 @@ class SeriesManagerDialog extends JDialog
 	final public int OK = 0;
 	final public int CANCEL = 1;
 	
-	public int state = 1;
+	public int state = CANCEL;
 	
 	DataManager dataManager;
 

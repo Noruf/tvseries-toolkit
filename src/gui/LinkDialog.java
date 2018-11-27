@@ -21,7 +21,6 @@ import javax.swing.JToggleButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import managers.ImportExportManager;
 import models.Link;
 import models.TvSeries;
 
@@ -38,7 +37,6 @@ class LinkDialog extends JDialog
 	TvSeries series;
 	Link link;
 	boolean edit;
-//	JTextField Season;
 	JTextField Name;
 	JTextField Address;
 	JComboBox<String> Type;

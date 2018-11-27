@@ -3,30 +3,16 @@ package gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
-import managers.ImportExportManager;
-import models.Link;
 import models.TvSeries;
 
 class EpisodeDialog extends JDialog
@@ -82,7 +68,7 @@ class EpisodeDialog extends JDialog
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		JPanel seasonPanel = new JPanel();
-		BoxLayout bl = new BoxLayout(seasonPanel,BoxLayout.LINE_AXIS);
+		new BoxLayout(seasonPanel,BoxLayout.LINE_AXIS);
 		
 		ButtonGroup group = new ButtonGroup(); 
 		Seasons = new JToggleButton[series.getNumberOfSeasons()];

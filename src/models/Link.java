@@ -11,16 +11,10 @@ public class Link{
 	public int Type;
 	
 	public Link(int[] s,String a,String n,int t) {
-		Seasons = s;
-		Address = a;
-		Name = n;
-		Type = t;
+		set(s,a,n,t);
 	}
 	public Link() {
-		Seasons = new int[]{-1};
-		Address = "";
-		Name = "";
-		Type = URL;
+		this(new int[]{-1},"","",URL);
 	}
 	
 	public void set(int[] s,String a,String n,int t) {
