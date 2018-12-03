@@ -415,9 +415,8 @@ public class Window implements Runnable {
 	private void updateSound() {
 		TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
 		if (series==null)return;
-		soundManager.stop();
-
 		if(settings.getBoolean("music"))soundManager.play(series.MusicPath);
+		else soundManager.stop();
 	}
 
 	private TvSeries getSelectedSeries() {
@@ -438,7 +437,8 @@ public class Window implements Runnable {
 				
 			}else {
 				seriesChoice.updateUI();
-			}	
+				updateSound();
+			}
 		}
 		else if(choice==sd.DELETE) {
 			dataManager.remove(series);
