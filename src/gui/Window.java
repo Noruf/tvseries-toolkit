@@ -233,6 +233,17 @@ public class Window implements Runnable {
 		source = new JComboBox<Link>();
 		sourcePanel.add(new JLabel("Source"));
 		sourcePanel.add(source);
+		JButton sourceinfo = new JButton("i");
+		sourceinfo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, linkManager.analyzeLink(
+						(Link)source.getSelectedItem(),
+						getSelectedSeries(),
+						Integer.parseInt("0" + episodeNumber.getText())));
+			}
+		});
+		sourcePanel.add(sourceinfo);
 		JButton editSource = new JButton("@");
 		editSource.addActionListener(new ActionListener() {
 			@Override
@@ -331,7 +342,6 @@ public class Window implements Runnable {
 		frame.setLocationByPlatform(true);
 		frame.setVisible(true);
 
-		updateSound();
 		settings.addCallback(() -> updateSound());
 		settings.addCallback(() -> toggleEditButtons(new JComponent[]{editSeries,addSeries,editSource,addSource}));
 	}

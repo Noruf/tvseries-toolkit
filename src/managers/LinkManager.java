@@ -7,9 +7,13 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.PrimitiveIterator.OfDouble;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import models.Link;
+import models.TvSeries;
 
 public class LinkManager {
 	public static LinkManager LinkManager = new LinkManager();
@@ -36,6 +40,8 @@ public class LinkManager {
 	        e.printStackTrace();
 	    }
 	}
+	
+	
 	private void openFolder(String path,String se){
         File dirToOpen = null;
         try {
@@ -68,4 +74,46 @@ public class LinkManager {
 			openFolder(link.Address,se);
 		}	
 	}
+	public String analyzeLink(Link link, TvSeries series, int e) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(link.Name);
+		sb.append("\n");
+		sb.append(link.Address);
+		sb.append("\nSeasons: ");
+		
+		int[] seasons = new int[link.Seasons.length];
+		System.arraycopy( link.Seasons, 0, seasons, 0, link.Seasons.length );
+		for(int i=0; i < seasons.length; i++) {
+			seasons[i] += 1;
+		}
+		String[] seasonsString = Arrays.stream(seasons).mapToObj(String::valueOf).toArray(String[]::new);
+		sb.append(String.join(", ", seasonsString));
+		
+		if(link.Type == Link.Folder) {
+			
+			sb.append("\n\nLast avaible unseen episode: ");
+			File dir = new File(link.Address);
+			File[] listOfFiles = dir.listFiles();
+			boolean found = false;
+			for(int i = e; i <= series.numberOfEpisodes(); i++) {
+				 found = false;
+				 Pattern P = Pattern.compile(Pattern.quote(series.getSEString(i)), Pattern.CASE_INSENSITIVE);
+				 for (File file : listOfFiles) { 
+					 if (P.matcher(file.getName()).find()) {
+						 found = true;
+						 break;
+					 }
+				 }
+				 if(!found) {
+					 sb.append(i!=e?series.getSEString(i-1):"none");
+					 break;
+				 }
+			 }
+			if(found)sb.append(series.getSEString(e));
+		}
+		return sb.toString();
+	}
+	
+	
+	
 }
