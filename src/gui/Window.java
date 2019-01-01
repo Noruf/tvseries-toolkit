@@ -39,6 +39,7 @@ import managers.DataManager;
 import managers.LinkManager;
 import managers.SettingsManager;
 import managers.SoundManager;
+import managers.WebManager;
 import models.Link;
 import models.TvSeries;
 
@@ -81,7 +82,7 @@ public class Window implements Runnable {
 		linkManager = LinkManager.LinkManager;
 		soundManager = SoundManager.SoundManager;
 		settings = SettingsManager.SettingsManager;
-
+		
 		frame = new JFrame("Tv Series Toolkit");
 		Container contentPane = frame.getContentPane();
 		

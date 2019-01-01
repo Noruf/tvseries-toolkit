@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.beans.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import managers.ImportExportManager;
+import managers.WebManager;
 import models.TvSeries;
 
 class SeriesDialog extends JDialog
@@ -37,7 +39,7 @@ class SeriesDialog extends JDialog
 	JTextField seasons;
 	JTextField img;
 	JTextField music;
-	
+	JTextField url;
 	
 	JOptionPane optionPane;
 	
@@ -88,6 +90,21 @@ class SeriesDialog extends JDialog
 		music.setComponentPopupMenu(new ContextMenu());
 		panel5.add(new JLabel("music"));
 		panel5.add(music);
+		
+		JPanel panel6 = new JPanel();
+		JTextField url = new JTextField(series.MusicPath, 10);
+		url.setComponentPopupMenu(new ContextMenu());
+		url.setToolTipText("<html>Supported sites:<br>fili.cc<br>imdb.com<html>");
+		panel6.add(new JLabel("URL"));
+		panel6.add(url);
+		JButton checkUrl = new JButton(">>");
+		checkUrl.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				checkUrl(url.getText());
+			}
+		});
+		panel6.add(checkUrl);
 
 		JFileChooser fc = new JFileChooser();
 		JButton imgplus = new JButton("+");
@@ -119,7 +136,7 @@ class SeriesDialog extends JDialog
 				}
 			}
 		});
-		final JComponent[] inputs = new JComponent[] { panel1, panel2, panel3, panel4, panel5};
+		final JComponent[] inputs = new JComponent[] { panel1, panel2, panel3, panel4, panel5, panel6};
 		String[] options = { "OK", "Delete", "Cancel" };
 		
 
@@ -157,7 +174,23 @@ class SeriesDialog extends JDialog
         pack();
     }
 
-    /**
+    protected void checkUrl(String url) {
+		WebManager wm = WebManager.WebManager;
+		TvSeries series = wm.scrapWebsite(url);
+		if(series==null) {
+			JOptionPane.showMessageDialog(this, "Error occured");
+			return;
+		}
+		if(FriendlyName.getText().isEmpty())FriendlyName.setText(series.Name);
+		Name.setText(series.Name);
+		int[] s = new int[series.Seasons.length];
+		System.arraycopy( series.Seasons, 0, s, 0, series.Seasons.length );
+		String[] seasonsString = Arrays.stream(s).mapToObj(String::valueOf).toArray(String[]::new);
+		seasons.setText(String.join(", ", seasonsString));
+		img.setText(series.ImgPath);
+	}
+
+	/**
      * This method handles events for the text field.
      */
     @Override
