@@ -51,6 +51,7 @@ class SeriesDialog extends JDialog
 	
 	ImportExportManager dataManager;
 
+	final private int textFieldWidth = 20;
 
     /**
      * Creates the reusable dialog.
@@ -61,54 +62,50 @@ class SeriesDialog extends JDialog
         this.series = series;
         this.edit = edit;
 
-		JPanel panel1 = new JPanel();
-		FriendlyName = new JTextField(series.FriendlyName, 10);
+        GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		JPanel mainPanel = new JPanel(new GridBagLayout());
+		gbc.anchor = GridBagConstraints.LAST_LINE_END;
+        
+		FriendlyName = new JTextField(series.FriendlyName, textFieldWidth);
 		FriendlyName.setComponentPopupMenu(new ContextMenu());
-		panel1.add(new JLabel("FriendlyName"));
-		panel1.add(FriendlyName);
-
-		JPanel panel2 = new JPanel();
-		Name = new JTextField(series.Name, 10);
-		Name.setComponentPopupMenu(new ContextMenu());
-		panel2.add(new JLabel("Name"));
-		panel2.add(Name);
-
-		JPanel panel3 = new JPanel();
-		seasons = new JTextField(series.SeasonsToString(), 10);
-		seasons.setComponentPopupMenu(new ContextMenu());
-		panel3.add(new JLabel("seasons"));
-		panel3.add(seasons);
-
-		JPanel panel4 = new JPanel();
-		img = new JTextField(series.ImgPath, 10);
-		img.setComponentPopupMenu(new ContextMenu());
-		panel4.add(new JLabel("img"));
-		panel4.add(img);
-
-		JPanel panel5 = new JPanel();
-		music = new JTextField(series.MusicPath, 10);
-		music.setComponentPopupMenu(new ContextMenu());
-		panel5.add(new JLabel("music"));
-		panel5.add(music);
+		mainPanel.add(new JLabel("Displayed name "),gbc);
+		gbc.gridx = 1;
 		
-		JPanel panel6 = new JPanel();
-		JTextField url = new JTextField(series.MusicPath, 10);
-		url.setComponentPopupMenu(new ContextMenu());
-		url.setToolTipText("<html>Supported sites:<br>fili.cc<br>imdb.com<html>");
-		panel6.add(new JLabel("URL"));
-		panel6.add(url);
-		JButton checkUrl = new JButton(">>");
-		checkUrl.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				checkUrl(url.getText());
-			}
-		});
-		panel6.add(checkUrl);
+		mainPanel.add(FriendlyName,gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		Name = new JTextField(series.Name, textFieldWidth);
+		Name.setComponentPopupMenu(new ContextMenu());
+		mainPanel.add(new JLabel("Title "),gbc);
+		gbc.gridx = 1;
+		mainPanel.add(Name,gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		seasons = new JTextField(series.SeasonsToString(), textFieldWidth);
+		seasons.setComponentPopupMenu(new ContextMenu());
+		mainPanel.add(new JLabel("Seasons "),gbc);
+		gbc.gridx = 1;
+		mainPanel.add(seasons,gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		img = new JTextField(series.ImgPath, textFieldWidth);
+		img.setComponentPopupMenu(new ContextMenu());
+		mainPanel.add(new JLabel("Image Path/URL "),gbc);
+		gbc.gridx = 1;
+		mainPanel.add(img,gbc);
+
 
 		JFileChooser fc = new JFileChooser();
 		JButton imgplus = new JButton("+");
-		panel4.add(imgplus);
+		gbc.gridx = 2;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		mainPanel.add(imgplus,gbc);
+		gbc.fill = GridBagConstraints.NONE;
 		imgplus.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -122,8 +119,21 @@ class SeriesDialog extends JDialog
 				}
 			}
 		});
+		
+		
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		music = new JTextField(series.MusicPath, textFieldWidth);
+		music.setComponentPopupMenu(new ContextMenu());
+		mainPanel.add(new JLabel("Music Path/URL "),gbc);
+		gbc.gridx = 1;
+		mainPanel.add(music,gbc);
+		
 		JButton musicplus = new JButton("+");
-		panel5.add(musicplus);
+		gbc.gridx = 2;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		mainPanel.add(musicplus,gbc);
+		gbc.fill = GridBagConstraints.NONE;
 		musicplus.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -136,7 +146,28 @@ class SeriesDialog extends JDialog
 				}
 			}
 		});
-		final JComponent[] inputs = new JComponent[] { panel1, panel2, panel3, panel4, panel5, panel6};
+		
+		gbc.gridx = 0;
+		gbc.gridy = 5;
+		JTextField url = new JTextField("", textFieldWidth);
+		url.setComponentPopupMenu(new ContextMenu());
+		url.setToolTipText("<html>Supported sites:<br>fili.cc<br>imdb.com<html>");
+		mainPanel.add(new JLabel("URL "),gbc);
+		gbc.gridx = 1;
+		mainPanel.add(url,gbc);
+		JButton checkUrl = new JButton(">>");
+		checkUrl.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				checkUrl(url.getText());
+			}
+		});
+		gbc.gridx = 2;
+		mainPanel.add(checkUrl,gbc);
+
+		
+		
+		final JComponent[] inputs = new JComponent[] { mainPanel };
 		String[] options = { "OK", "Delete", "Cancel" };
 		
 

@@ -45,8 +45,8 @@ class SeriesManagerDialog extends JDialog
         this.dataManager = DataManager.DataManager;
         List<TvSeries> tvseries =  dataManager.getTvSeries();
         listModel = (TvSeries[])tvseries.toArray(new TvSeries[tvseries.size()]);
-        
         list = new JList<TvSeries>(listModel);
+        
         JPanel panel1 = new JPanel();
         panel1.add(list);
         JButton moveUp = new JButton("Move up!");
