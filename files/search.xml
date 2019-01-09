@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<searchEngines>
+	<search>
+		<Address>https://duckduckgo.com/?q=###</Address>
+		<Name>DuckDuckGo</Name>
+	</search>
+	<search>
+		<Address>https://www.startpage.com/do/search?query=###</Address>
+		<Name>StartPage</Name>
+	</search>
+	<search>
+		<Address>http://www.google.com/search?q=###</Address>
+		<Name>Google</Name>
+	</search>
+	<search>
+		<Address>https://bing.com/?q=###</Address>
+		<Name>Bing</Name>
+	</search>
+	 
+</searchEngines>

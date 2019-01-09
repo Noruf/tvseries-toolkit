@@ -22,6 +22,7 @@ import org.w3c.dom.Element;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import org.w3c.dom.NodeList;
@@ -192,10 +193,11 @@ public class ImportExportManager {
 	public List<Link> ImportSearchEngines() {
 		List<Link> searchEngines = new ArrayList<Link>();
 		try {
-			File inputFile = new File(currentDirectory.getAbsolutePath()+"/data/search.xml");
+			InputStream inputStream = this.getClass().getResourceAsStream("/search.xml");
+			if(inputStream==null)return searchEngines;
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(inputFile);
+			Document doc = dBuilder.parse(inputStream);
 			doc.getDocumentElement().normalize();
 			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 			NodeList nList = doc.getElementsByTagName("search");
