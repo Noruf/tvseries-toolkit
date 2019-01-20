@@ -17,7 +17,7 @@ public class DataManager {
 	List<Link> searchEngines = new ArrayList<>();
 	
 	public DataManager() {
-		importExportManager = new ImportExportManager();
+		importExportManager = ImportExportManager.ImportExportManager;
 	}
 	
 	public void importData(W window) {

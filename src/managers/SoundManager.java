@@ -8,12 +8,15 @@ import javazoom.jlgui.basicplayer.BasicPlayerException;
 
 public class SoundManager {
 	public static SoundManager SoundManager = new SoundManager();
+	public ImportExportManager ImportExportManager;
+	
 
 	BasicPlayer player;
 	String currentSong;
 	public SoundManager() {
 		player = new BasicPlayer();
 		currentSong = "";
+		ImportExportManager = ImportExportManager.ImportExportManager;
 	}
 	
 
@@ -25,7 +28,7 @@ public class SoundManager {
 		if(songName.isEmpty())
 			return;
 		player = new BasicPlayer();
-		String pathToMp3 = System.getProperty("user.dir") + "/data/" + songName;
+		String pathToMp3 = ImportExportManager.workingDirectory + "/data/" + songName;
 		File file = new File(pathToMp3);
 		try {;
 			player.open(file);

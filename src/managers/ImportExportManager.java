@@ -34,10 +34,19 @@ import models.Link;;
 
 public class ImportExportManager {
 	public static ImportExportManager ImportExportManager = new ImportExportManager();
-	
-	File currentDirectory;
+	boolean devEnv = System.getenv("eclipse42")!=null;
+	String workingDirectory;
 	public ImportExportManager() {
-		currentDirectory = new File("");
+		String OS = (System.getProperty("os.name")).toLowerCase();
+		if (OS.contains("win")){
+		    workingDirectory = System.getenv("AppData");
+		}
+		else{
+		    workingDirectory = System.getProperty("user.home");
+			workingDirectory += OS.contains("linux") ? "" :"/Library/Application Support";
+		}
+		workingDirectory += "/.tvseriestoolkit";
+		if(devEnv)workingDirectory = new File("").getAbsolutePath();
 	}
 
 	public void ExportData(List<TvSeries> series) {
@@ -114,7 +123,7 @@ public class ImportExportManager {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(currentDirectory.getAbsolutePath()+"/data/tvseries.xml"));
+			StreamResult result = new StreamResult(new File(workingDirectory+"/data/tvseries.xml"));
 			transformer.transform(source, result);
 
 			// Output to console for testing
@@ -129,7 +138,7 @@ public class ImportExportManager {
 	public List<TvSeries> ImportData() {
 		List<TvSeries> seriesList = new ArrayList<TvSeries>();
 		try {
-			File inputFile = new File(currentDirectory.getAbsolutePath()+"/data/tvseries.xml");
+			File inputFile = new File(workingDirectory+"/data/tvseries.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -226,7 +235,7 @@ public class ImportExportManager {
 	public Map<String, Object> ImportSettings() {
 		Map<String, Object> settings = new HashMap<String, Object>();
 		try {
-			File inputFile = new File(currentDirectory.getAbsolutePath()+"/data/settings.xml");
+			File inputFile = new File(workingDirectory+"/data/settings.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -279,7 +288,7 @@ public class ImportExportManager {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(currentDirectory.getAbsolutePath()+"/data/settings.xml"));
+			StreamResult result = new StreamResult(new File(workingDirectory+"/data/settings.xml"));
 			transformer.transform(source, result);
 
 			// Output to console for testing
@@ -296,7 +305,7 @@ public class ImportExportManager {
 		name = filenameValidator(name) + "." +  FilenameUtils.getExtension(sourcePath);
 		if(isURL)return copyURL(sourcePath,name);
 		File source = new File(sourcePath);
-		File dest = new File("data/" + name);
+		File dest = new File(workingDirectory+"/data/" + name);
 		try {
 			FileUtils.copyFile(source, dest);
 		} catch (IOException e) {
@@ -307,7 +316,7 @@ public class ImportExportManager {
 	}
 	private String copyURL(String sourcePath, String name) {
 		
-		File dest = new File("data/" + name);
+		File dest = new File(workingDirectory+"/data/" + name);
 		try {
 			URL source = new URL(sourcePath);
 			FileUtils.copyURLToFile(source, dest);
@@ -331,9 +340,8 @@ public class ImportExportManager {
 	public BufferedImage loadImage(String imgPath){
 		BufferedImage myPicture = null;
 		
-		File currentDirectory = new File("");
 		try {
-			myPicture = ImageIO.read(new File(currentDirectory.getAbsolutePath() + "/data/" + imgPath));
+			myPicture = ImageIO.read(new File(workingDirectory + "/data/" + imgPath));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
