@@ -65,8 +65,9 @@ class SeriesDialog extends JDialog
         GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
+		gbc.insets = new Insets(6,0,0,0);
 		JPanel mainPanel = new JPanel(new GridBagLayout());
-		gbc.anchor = GridBagConstraints.LAST_LINE_END;
+		gbc.anchor = GridBagConstraints.LINE_END;
         
 		FriendlyName = new JTextField(series.FriendlyName, textFieldWidth);
 		FriendlyName.setComponentPopupMenu(new ContextMenu());
@@ -93,6 +94,7 @@ class SeriesDialog extends JDialog
 
 		gbc.gridx = 0;
 		gbc.gridy = 3;
+		gbc.insets = new Insets(0,0,0,0);
 		img = new JTextField(series.ImgPath, textFieldWidth);
 		img.setComponentPopupMenu(new ContextMenu());
 		mainPanel.add(new JLabel("Image Path/URL "),gbc);
