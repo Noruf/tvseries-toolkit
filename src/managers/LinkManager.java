@@ -42,12 +42,12 @@ public class LinkManager {
 	}
 	
 	
-	private void openFolder(String path,String se){
+	private void openFolder(String path,TvSeries series,int ep){
         File dirToOpen = null;
         try {
             dirToOpen = new File(path);
             File[] listOfFiles = dirToOpen.listFiles();
-            Pattern P = Pattern.compile(Pattern.quote(se), Pattern.CASE_INSENSITIVE);
+            Pattern P = Pattern.compile(series.getSEString(ep,true), Pattern.CASE_INSENSITIVE);
             for (int i = 0; i < listOfFiles.length; i++) {
               if (P.matcher(listOfFiles[i].getName()).find()) {
                 desktop.open(new File(listOfFiles[i].getAbsolutePath()));
@@ -60,9 +60,9 @@ public class LinkManager {
         }
     }
 	
-	public void openLink(Link link,String name,String se) {
+	public void openLink(Link link,TvSeries series, int ep) {
 		if(link.Type==Link.URL) {
-			String addr = link.getAddress(name, se);
+			String addr = link.getAddress(series.Name, series.getSEString(ep));
 			try {
 				openWebpage(new URL(addr));
 			} catch (MalformedURLException e) {
@@ -71,7 +71,7 @@ public class LinkManager {
 			}
 		}
 		else if(link.Type == Link.Folder) {
-			openFolder(link.Address,se);
+			openFolder(link.Address,series,ep);
 		}	
 	}
 	public String analyzeLink(Link link, TvSeries series, int e) {

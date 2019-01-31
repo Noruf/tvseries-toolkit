@@ -85,6 +85,13 @@ public class TvSeries{
 		}
 		return sb.toString();
 	}
+	public String getSEString(int ep,boolean template) {
+		if(!template)return getSEString(ep);
+		int[] se= fromEpisode(ep);
+		int s=se[0]+1;
+		int e=se[1];
+		return "s0*" + s + "e0*" + e + "(\\D|$)";
+	}
 	public String getSEString(int ep) {
 		int[] se= fromEpisode(ep);
 		int s=se[0]+1;

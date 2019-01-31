@@ -295,7 +295,7 @@ public class Window implements Runnable {
 				Thread one = new Thread() {
 					public void run() {
 						Link link = (Link)source.getSelectedItem();
-						linkManager.openLink(link , series.Name, series.getSEString(ep));
+						linkManager.openLink(link , series, ep);
 						statusLabel.setText("Link opened: " + link.Name);
 						if(settings.getBoolean("autosave")) {
 							dataManager.exportData();
