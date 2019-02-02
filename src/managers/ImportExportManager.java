@@ -339,9 +339,14 @@ public class ImportExportManager {
 	
 	public BufferedImage loadImage(String imgPath){
 		BufferedImage myPicture = null;
-		
 		try {
-			myPicture = ImageIO.read(new File(workingDirectory + "/data/" + imgPath));
+			if(imgPath.isEmpty()) {
+				myPicture = ImageIO.read(this.getClass().getResourceAsStream("/empty.png"));
+			}
+			else {
+				myPicture = ImageIO.read(new File(workingDirectory + "/data/" + imgPath));
+			}
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

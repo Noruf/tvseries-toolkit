@@ -410,7 +410,7 @@ public class Window implements Runnable {
 		int ep = series.CurrentEpisode;
 		episodeNumber.setText(Integer.toString(ep));
 		updateSources(series, currentSE[0]);
-		String imgPath = series.ImgPath.isEmpty() ? "empty.png" : series.ImgPath;
+		String imgPath = series.ImgPath;
 		statusLabel.setText(series.Name + ", ep:"+ep+", "+series.getSEString());
 		Thread one = new Thread() {
 			public void run() {
