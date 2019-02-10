@@ -27,6 +27,8 @@ import java.net.URL;
 
 import org.w3c.dom.NodeList;
 
+import javazoom.jlgui.basicplayer.BasicPlayerException;
+
 import org.w3c.dom.Node;
 
 import models.TvSeries;
@@ -46,9 +48,21 @@ public class ImportExportManager {
 			workingDirectory += OS.contains("linux") ? "" :"/Library/Application Support";
 		}
 		workingDirectory += "/.tvseriestoolkit";
-		if(devEnv)workingDirectory = new File("").getAbsolutePath();
+		//if(devEnv)workingDirectory = new File("").getAbsolutePath();
+		mkFolder();
 	}
 
+	
+	private void mkFolder() {
+		(new Thread() {
+			public void run() {
+				File f = new File(workingDirectory+"/data");
+				if(f.isDirectory())return;
+				f.mkdirs();
+			}
+		}).start();	
+	}
+	
 	public void ExportData(List<TvSeries> series) {
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
