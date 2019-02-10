@@ -348,7 +348,7 @@ public class Window implements Runnable {
 	}
 
 	private void seriesChanged() {
-		updateGUI();
+		updateGUI(false);
 		updateSound();
 	}
 	
@@ -358,7 +358,7 @@ public class Window implements Runnable {
 			seriesChoice.addItem(item);
 		}
 		seriesChoice.setMaximumRowCount(seriesChoice.getModel().getSize());
-		updateGUI();
+		updateGUI(false);
 	}
 
 	private void updateSeriesChooser(Object series) {
@@ -398,29 +398,28 @@ public class Window implements Runnable {
 	private void setPoster(ImageIcon image, TvSeries series) {
 		if(series == getSelectedSeries()&&image!=null) {
 			picLabel.setIcon(image);
-			frame.revalidate();
-			frame.repaint();
-			frame.pack();
 		}
+		frame.revalidate();
+		frame.repaint();
+		frame.pack();
 	}
 
-	protected void updateGUI() {
+	protected void updateGUI(Boolean edit) {
 		TvSeries series = (TvSeries)seriesChoice.getSelectedItem();
-		if(series==null)return;
-		int ep = series.CurrentEpisode;
-		episodeNumber.setText(Integer.toString(ep));
-		updateSources(series, currentSE[0]);
-		String imgPath = series.ImgPath;
-		statusLabel.setText(series.Name + ", ep:"+ep+", "+series.getSEString());
-		Thread one = new Thread() {
+		if(!edit && series!=null) {
+			int ep = series.CurrentEpisode;
+			episodeNumber.setText(Integer.toString(ep));
+			updateSources(series, currentSE[0]);
+			statusLabel.setText(series.Name + ", ep:"+ep+", "+series.getSEString());
+		}
+		String imgPath = series!=null ? series.ImgPath : "";
+		(new Thread() {
 			public void run() {
-
 				BufferedImage myPicture = dataManager.loadImage(imgPath);
 				ImageIcon image = new ImageIcon(myPicture.getScaledInstance(-1, 450, Image.SCALE_AREA_AVERAGING));
 				setPoster(image,series);
 			}
-		};
-		one.start();
+		}).start();
 	}
 
 	private void updateSound() {
