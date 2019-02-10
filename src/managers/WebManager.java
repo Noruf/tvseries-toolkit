@@ -43,11 +43,8 @@ public class WebManager {
 			for(int i = 0; i < seasons.length; i++) {
 				seasons[i] = el.get(i).childNodeSize();
 			}
-			for (int s : seasons) {
-				System.out.println(s);
-			}
 			String title = document.select(".title").text();
-			String poster = "https://fili.cc" + document.select("#poster").attr("src");
+			String poster = "https:" + document.select("#poster").attr("src");
 			return new TvSeries("", title, seasons, poster, "");
 
 		} catch (IOException e) {
