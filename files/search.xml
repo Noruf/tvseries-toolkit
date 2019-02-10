@@ -9,12 +9,15 @@
 		<Name>StartPage</Name>
 	</search>
 	<search>
-		<Address>http://www.google.com/search?q=###</Address>
-		<Name>Google</Name>
+		<Address>https://searx.me/?q=###</Address>
+		<Name>SearX</Name>
+	</search>
+	 <search>
+		<Address>https://www.qwant.com/?q=###</Address>
+		<Name>Quant</Name>
 	</search>
 	<search>
-		<Address>https://bing.com/?q=###</Address>
-		<Name>Bing</Name>
+		<Address>https://www.ecosia.org/search?q=###</Address>
+		<Name>Ecosia</Name>
 	</search>
-	 
 </searchEngines>
