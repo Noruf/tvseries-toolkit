@@ -48,7 +48,7 @@ public class ImportExportManager {
 			workingDirectory += OS.contains("linux") ? "" :"/Library/Application Support";
 		}
 		workingDirectory += "/.tvseriestoolkit";
-		//if(devEnv)workingDirectory = new File("").getAbsolutePath();
+		if(devEnv)workingDirectory = new File("").getAbsolutePath();
 		mkFolder();
 	}
 
@@ -153,6 +153,7 @@ public class ImportExportManager {
 		List<TvSeries> seriesList = new ArrayList<TvSeries>();
 		try {
 			File inputFile = new File(workingDirectory+"/data/tvseries.xml");
+			if(!inputFile.isFile())return seriesList;
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -250,6 +251,7 @@ public class ImportExportManager {
 		Map<String, Object> settings = new HashMap<String, Object>();
 		try {
 			File inputFile = new File(workingDirectory+"/data/settings.xml");
+			if(!inputFile.isFile())return settings;
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
